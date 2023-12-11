@@ -1,0 +1,368 @@
+openapi: 3.0.3
+info:
+  title: Recipes API
+  version: 1.0.0
+  description: A simple API to manage recipes
+paths:
+  /chefs/create/:
+    post:
+      operationId: chefs_create_create
+      tags:
+      - chefs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/User'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /recipes/:
+    get:
+      operationId: recipes_list
+      description: |-
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions for recipes.
+      parameters:
+      - in: query
+        name: chef_username
+        schema:
+          type: string
+        description: Chef username of the recipe
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Name of the recipe
+      tags:
+      - recipes
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Recipe'
+          description: ''
+    post:
+      operationId: recipes_create
+      description: |-
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions for recipes.
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+          description: ''
+  /recipes/{id}/:
+    get:
+      operationId: recipes_retrieve
+      description: |-
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions for recipes.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe.
+        required: true
+      tags:
+      - recipes
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+          description: ''
+    put:
+      operationId: recipes_update
+      description: |-
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions for recipes.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe.
+        required: true
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Recipe'
+        required: true
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+          description: ''
+    patch:
+      operationId: recipes_partial_update
+      description: |-
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions for recipes.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe.
+        required: true
+      tags:
+      - recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedRecipe'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedRecipe'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedRecipe'
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+          description: ''
+    delete:
+      operationId: recipes_destroy
+      description: |-
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions for recipes.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this recipe.
+        required: true
+      tags:
+      - recipes
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+  /recipes/create_chef/:
+    get:
+      operationId: recipes_create_chef_retrieve
+      description: |-
+        This viewset automatically provides `list`, `create`, `retrieve`,
+        `update` and `destroy` actions for recipes.
+      tags:
+      - recipes
+      security:
+      - tokenAuth: []
+      - cookieAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipe'
+          description: ''
+components:
+  schemas:
+    PatchedRecipe:
+      type: object
+      description: Serializer for Recipe objects
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        chef:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          description: Name of the recipe
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          description: Description of the recipe
+        ingredients:
+          type: string
+          description: Ingredients of the recipe
+        instructions:
+          type: string
+          title: Directions
+          description: Instructions of the recipe
+        prep_time:
+          type: string
+          description: 'Preparation time of the recipe, format: HH:MM:SS'
+        cook_time:
+          type: string
+          description: 'Cooking time of the recipe, format: HH:MM:SS'
+        servings:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          description: Servings of the recipe
+    Recipe:
+      type: object
+      description: Serializer for Recipe objects
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        chef:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          description: Name of the recipe
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+          description: Description of the recipe
+        ingredients:
+          type: string
+          description: Ingredients of the recipe
+        instructions:
+          type: string
+          title: Directions
+          description: Instructions of the recipe
+        prep_time:
+          type: string
+          description: 'Preparation time of the recipe, format: HH:MM:SS'
+        cook_time:
+          type: string
+          description: 'Cooking time of the recipe, format: HH:MM:SS'
+        servings:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: 1
+          format: int64
+          description: Servings of the recipe
+      required:
+      - chef
+      - cook_time
+      - created_at
+      - id
+      - ingredients
+      - instructions
+      - name
+      - prep_time
+      - updated_at
+    User:
+      type: object
+      description: Serializer for User objects
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        username:
+          type: string
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+      required:
+      - id
+      - password
+      - username
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
